@@ -1,0 +1,6 @@
+{
+  "name": "Precision Crop",
+  "description": "Advanced image cropping tool supporting various aspect ratios, custom freehand cropping, Zoom, Rotate, Undo/Redo, Export quality settings, and Fullscreen mode.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
