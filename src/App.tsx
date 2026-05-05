@@ -309,7 +309,7 @@ export default function App() {
             <Crop className="w-5 h-5 text-white" />
           </div>
           <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-900">
-            Precision Crop
+            Eluna Crop
           </h1>
         </div>
 
