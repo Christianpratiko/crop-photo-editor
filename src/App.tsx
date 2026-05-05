@@ -18,7 +18,8 @@ import {
   Settings,
   Crop,
   RefreshCcw,
-  X
+  X,
+  Hand
 } from 'lucide-react';
 
 export default function App() {
@@ -28,7 +29,16 @@ export default function App() {
 
   // Settings
   const [aspectRatio, setAspectRatio] = useState<number>(NaN);
+  const [dragMode, setDragMode] = useState<'crop' | 'move'>('crop');
   
+  // Update drag mode directly on the cropper instance when it changes
+  useEffect(() => {
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      cropper.setDragMode(dragMode);
+    }
+  }, [dragMode]);
+
   // Update aspect ratio directly on the cropper instance when it changes
   useEffect(() => {
     const cropper = cropperRef.current?.cropper;
@@ -351,6 +361,9 @@ export default function App() {
         {/* Left Toolbar - Only when image exists */}
         {image && (
           <aside className="w-16 flex flex-col items-center py-4 bg-white border-r border-slate-200 space-y-4 overflow-y-auto z-10 flex-shrink-0">
+            <ToolButton icon={<Crop />} onClick={() => setDragMode('crop')} tooltip="Crop Mode" isActive={dragMode === 'crop'} />
+            <ToolButton icon={<Hand />} onClick={() => setDragMode('move')} tooltip="Move / Pan Mode" isActive={dragMode === 'move'} />
+            <div className="w-8 h-px bg-slate-200 my-2" />
             <ToolButton icon={<ZoomIn />} onClick={() => handleZoom(0.1)} tooltip="Zoom In" />
             <ToolButton icon={<ZoomOut />} onClick={() => handleZoom(-0.1)} tooltip="Zoom Out" />
             <div className="w-8 h-px bg-slate-200 my-2" />
@@ -559,12 +572,16 @@ export default function App() {
   );
 }
 
-function ToolButton({ icon, onClick, tooltip }: { icon: React.ReactNode, onClick: () => void, tooltip: string }) {
+function ToolButton({ icon, onClick, tooltip, isActive }: { icon: React.ReactNode, onClick: () => void, tooltip: string, isActive?: boolean }) {
   return (
     <div className="group relative">
       <button
         onClick={onClick}
-        className="p-3 bg-white text-slate-600 rounded-xl hover:bg-indigo-50 hover:text-indigo-600 border border-slate-100 hover:border-indigo-100 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 flex items-center justify-center shadow-sm"
+        className={`p-3 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 flex items-center justify-center shadow-sm border ${
+          isActive 
+            ? 'bg-indigo-100 text-indigo-700 border-indigo-200' 
+            : 'bg-white text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border-slate-100 hover:border-indigo-100'
+        }`}
         aria-label={tooltip}
       >
         <div className="w-5 h-5 [&>svg]:w-full [&>svg]:h-full">
